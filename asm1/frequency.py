@@ -6,7 +6,7 @@ def coun_tweet_words(tweet, term_dict):
     total = 0
     words = re.findall(r"\b[a-zA-Z]+\b",tweet['text'])
     for word in words:
-        word = word.lower()
+#        word = word.lower()
         count = 1
         if  word in term_dict:
             count = term_dict[word] + 1
