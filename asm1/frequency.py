@@ -4,8 +4,13 @@ import re
 
 def coun_tweet_words(tweet, term_dict):
     total = 0
-    words = re.findall(r"\b[a-zA-Z]+\b",tweet['text'])
+    words = re.split("[^A-Za-z,]", tweet['text'])
     for word in words:
+        word = word.decode("utf-8")
+        word.strip()
+        if not word:
+            break
+        
 #        word = word.lower()
         count = 1
         if  word in term_dict:
