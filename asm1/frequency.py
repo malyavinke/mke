@@ -7,7 +7,7 @@ def coun_tweet_words(tweet, term_dict):
     words = re.split("[^A-Za-z,]", tweet['text'])
     for word in words:
         word = word.decode("utf-8")
-        word.strip()
+#        word.strip()
         if not word:
             break
         
