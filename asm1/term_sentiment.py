@@ -17,11 +17,19 @@ def load_sent_dict():
 def tweet_sentiment(tweet, sent_dict, term_dict):
     total = 0
     new_words = {}
-    words = re.findall(r"\b[a-zA-Z]+\b",tweet['text'])
+#    words = re.findall(r"\b[a-zA-Z]+\b",tweet['text'])
+    ascii_str = tweet['text']
+    try:
+        ascii_str = ascii_str.decode('ascii')
+    except:
+        return 
+
+    words = ascii_str.split()
+
     for word in words:
-        word = word.lower()
-        if  word in sent_dict:
-            total = total + sent_dict[word]
+        low_word = word.lower()
+        if  low_word in sent_dict:
+            total = total + sent_dict[low_word]
         else:
             if word in new_words:
                 new_words[word] = new_words[word] + 1
@@ -33,7 +41,7 @@ def tweet_sentiment(tweet, sent_dict, term_dict):
         if term in term_dict:
             entry = term_dict[term]
 
-        if total > 0:
+        if total >= 0:
             entry[0] = entry[0] + 1
         if total < 0:
             entry[1] = entry[1] + 1
