@@ -42,7 +42,7 @@ def run_test(fin):
     # the attributes.
     lines.reverse()
     attributes = [attr.strip() for attr in lines.pop().split(",")]
-    target_attr = attributes[-1]
+    target_attr = attributes[0]
     lines.reverse()
 
     # Create a list of the data in the data file
@@ -61,8 +61,8 @@ def run_test(fin):
     classification = classify(tree, examples)
 
     # Print out the classification for each record
-#    for item in classification:
-#        print item
+    for item in classification:
+        print item
 
     return tree
 
@@ -82,15 +82,15 @@ def print_tree(tree, str):
 
 if __name__ == "__main__":
     fin = get_file()
-#    print "------------------------\n"
-#    print "--   Classification   --\n"
-#    print "------------------------\n"
-#    print "\n"    
+    print "------------------------\n"
+    print "--   Classification   --\n"
+    print "------------------------\n"
+    print "\n"    
     tree = run_test(fin)
-    print "\n"
-    print "------------------------\n"
-    print "--   Decision Tree    --\n"
-    print "------------------------\n"
-    print "\n"
-    print_tree(tree, "")
+#    print "\n"
+#    print "------------------------\n"
+#    print "--   Decision Tree    --\n"
+#    print "------------------------\n"
+#    print "\n"
+#    print_tree(tree, "")
     fin.close()

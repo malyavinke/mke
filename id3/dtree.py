@@ -92,6 +92,7 @@ def get_examples(data, attr, value):
             return rtn_lst
 
 def get_classification(record, tree):
+#    print tree
     """
     This function recursively traverses the decision tree and returns a
     classification for the given record.
@@ -104,7 +105,13 @@ def get_classification(record, tree):
     # Traverse the tree further until a leaf node is found.
     else:
         attr = tree.keys()[0]
-        t = tree[attr][record[attr]]
+#        print attr
+        if attr == 'default': attr = tree.keys()[1]	
+        try:
+            t = tree[attr][record[attr]]
+        except: #If fails then just bin the fare according to the class
+            return tree['default']
+#        print 'tttt', t
         return get_classification(record, t)
 
 def classify(tree, data):
@@ -144,7 +151,7 @@ def create_decision_tree(data, attributes, target_attr, fitness_func):
 
         # Create a new decision tree/node with the best attribute and an empty
         # dictionary object--we'll fill that up next.
-        tree = {best:{}}
+        tree = {best:{}, 'default': default}
 
         # Create a new decision tree/sub-node for each of the values in the
         # best attribute field
