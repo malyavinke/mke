@@ -1,5 +1,7 @@
 package com.smilart.algo4;
 
+import java.util.regex.Pattern;
+
 /*************************************************************************
  *  Compilation:  javac EdgeWeightedDigraph.java
  *  Execution:    java EdgeWeightedDigraph V E
@@ -23,151 +25,175 @@ package com.smilart.algo4;
 
 
 public class EdgeWeightedDigraph {
-    private final int V;
-    private int E;
-    private Bag<DirectedEdge>[] adj;
-    
-    /**
-     * Create an empty edge-weighted digraph with V vertices.
-     */
-    public EdgeWeightedDigraph(int V) {
-        if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
-        this.V = V;
-        this.E = 0;
-        adj = (Bag<DirectedEdge>[]) new Bag[V];
-        for (int v = 0; v < V; v++)
-            adj[v] = new Bag<DirectedEdge>();
-    }
 
-   /**
-     * Create a edge-weighted digraph with V vertices and E edges.
-     */
-    public EdgeWeightedDigraph(int V, int E) {
-        this(V);
-        if (E < 0) throw new IllegalArgumentException("Number of edges in a Digraph must be nonnegative");
-        for (int i = 0; i < E; i++) {
-            int v = (int) (Math.random() * V);
-            int w = (int) (Math.random() * V);
-            double weight = Math.round(100 * Math.random()) / 100.0;
-            DirectedEdge e = new DirectedEdge(v, w, weight);
-            addEdge(e);
-        }
-    }
+	private static final Pattern WHITESPACE_PATTERN
+	= Pattern.compile("\\p{javaWhitespace}+");
 
-    /**
-     * Create an edge-weighted digraph from input stream.
-     */
-    public EdgeWeightedDigraph(In in) {
-        this(in.readInt());
-        int E = in.readInt();
-        for (int i = 0; i < E; i++) {
-            int v = in.readInt();
-            int w = in.readInt();
-            double weight = in.readDouble();
-            addEdge(new DirectedEdge(v, w, weight));
-        }
-    }
+	private final int V;
+	private int E;
+	private Bag<DirectedEdge>[] adj;
 
-   /**
-     * Copy constructor.
-     */
-    public EdgeWeightedDigraph(EdgeWeightedDigraph G) {
-        this(G.V());
-        this.E = G.E();
-        for (int v = 0; v < G.V(); v++) {
-            // reverse so that adjacency list is in same order as original
-            Stack<DirectedEdge> reverse = new Stack<DirectedEdge>();
-            for (DirectedEdge e : G.adj[v]) {
-                reverse.push(e);
-            }
-            for (DirectedEdge e : reverse) {
-                adj[v].add(e);
-            }
-        }
-    }
+	/**
+	 * Create an empty edge-weighted digraph with V vertices.
+	 */
+	public EdgeWeightedDigraph(int V) {
+		if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
+		this.V = V;
+		this.E = 0;
+		adj = (Bag<DirectedEdge>[]) new Bag[V];
+		for (int v = 0; v < V; v++)
+			adj[v] = new Bag<DirectedEdge>();
+	}
 
-   /**
-     * Return the number of vertices in this digraph.
-     */
-    public int V() {
-        return V;
-    }
+	/**
+	 * Create a edge-weighted digraph with V vertices and E edges.
+	 */
+	public EdgeWeightedDigraph(int V, int E) {
+		this(V);
+		if (E < 0) throw new IllegalArgumentException("Number of edges in a Digraph must be nonnegative");
+		for (int i = 0; i < E; i++) {
+			int v = (int) (Math.random() * V);
+			int w = (int) (Math.random() * V);
+			double weight = Math.round(100 * Math.random()) / 100.0;
+			DirectedEdge e = new DirectedEdge(v, w, weight);
+			addEdge(e);
+		}
+	}
 
-   /**
-     * Return the number of edges in this digraph.
-     */
-    public int E() {
-        return E;
-    }
+	/**
+	 * Create an edge-weighted digraph from input stream.
+	 */
+	public EdgeWeightedDigraph(In in) {
+		this(in.readInt());
+		int E = in.readInt();
+		for (int i = 0; i < E; i++) {
+			int v = in.readInt();
+			int w = in.readInt();
+			double weight = in.readDouble();
+			addEdge(new DirectedEdge(v, w, weight));
+		}
+	}
 
 
-   /**
-     * Add the directed edge e to this digraph.
-     */
-    public void addEdge(DirectedEdge e) {
-        int v = e.from();
-        adj[v].add(e);
-        E++;
-    }
+	/**
+	 * Create an edge-weighted digraph from input stream.
+	 */
+	public EdgeWeightedDigraph(In in, int V) {
+		this(V);
+
+		String line = null; // readLine();
+		while ((line = in.readLine())!= null){
+			String[] fields = WHITESPACE_PATTERN.split(line);
+			//			int[] vals = new int[fields.length];
+			int v = Integer.parseInt(fields[0]) - 1;
+			for (int i = 1; i < fields.length; i++){
+				String [] tuple = fields[i].split(",");
+				addEdge(new DirectedEdge(v, Integer.parseInt(tuple[0]) - 1, Integer.parseInt(tuple[1])));
+			}
+		}
+		/**/
+	}
+
+	/**
+	 * Copy constructor.
+	 */
+	public EdgeWeightedDigraph(EdgeWeightedDigraph G) {
+		this(G.V());
+		this.E = G.E();
+		for (int v = 0; v < G.V(); v++) {
+			// reverse so that adjacency list is in same order as original
+			Stack<DirectedEdge> reverse = new Stack<DirectedEdge>();
+			for (DirectedEdge e : G.adj[v]) {
+				reverse.push(e);
+			}
+			for (DirectedEdge e : reverse) {
+				adj[v].add(e);
+			}
+		}
+	}
+
+	/**
+	 * Return the number of vertices in this digraph.
+	 */
+	public int V() {
+		return V;
+	}
+
+	/**
+	 * Return the number of edges in this digraph.
+	 */
+	public int E() {
+		return E;
+	}
 
 
-   /**
-     * Return the edges incident from vertex v as an Iterable.
-     * To iterate over the edges incident from vertex v in digraph G, use foreach notation:
-     * <tt>for (DirectedEdge e : G.adj(v))</tt>.
-     */
-    public Iterable<DirectedEdge> adj(int v) {
-        return adj[v];
-    }
-
-   /**
-     * Return all edges in this digraph as an Iterable.
-     * To iterate over the edges in the digraph, use foreach notation:
-     * <tt>for (DirectedEdge e : G.edges())</tt>.
-     */
-    public Iterable<DirectedEdge> edges() {
-        Bag<DirectedEdge> list = new Bag<DirectedEdge>();
-        for (int v = 0; v < V; v++) {
-            for (DirectedEdge e : adj(v)) {
-                list.add(e);
-            }
-        }
-        return list;
-    } 
-
-   /**
-     * Return number of edges incident from v.
-     */
-    public int outdegree(int v) {
-        return adj[v].size();
-    }
+	/**
+	 * Add the directed edge e to this digraph.
+	 */
+	public void addEdge(DirectedEdge e) {
+		int v = e.from();
+		adj[v].add(e);
+		E++;
+	}
 
 
+	/**
+	 * Return the edges incident from vertex v as an Iterable.
+	 * To iterate over the edges incident from vertex v in digraph G, use foreach notation:
+	 * <tt>for (DirectedEdge e : G.adj(v))</tt>.
+	 */
+	public Iterable<DirectedEdge> adj(int v) {
+		return adj[v];
+	}
 
-   /**
-     * Return a string representation of this digraph.
-     */
-    public String toString() {
-        String NEWLINE = System.getProperty("line.separator");
-        StringBuilder s = new StringBuilder();
-        s.append(V + " " + E + NEWLINE);
-        for (int v = 0; v < V; v++) {
-            s.append(v + ": ");
-            for (DirectedEdge e : adj[v]) {
-                s.append(e + "  ");
-            }
-            s.append(NEWLINE);
-        }
-        return s.toString();
-    }
+	/**
+	 * Return all edges in this digraph as an Iterable.
+	 * To iterate over the edges in the digraph, use foreach notation:
+	 * <tt>for (DirectedEdge e : G.edges())</tt>.
+	 */
+	public Iterable<DirectedEdge> edges() {
+		Bag<DirectedEdge> list = new Bag<DirectedEdge>();
+		for (int v = 0; v < V; v++) {
+			for (DirectedEdge e : adj(v)) {
+				list.add(e);
+			}
+		}
+		return list;
+	} 
 
-    /**
-     * Test client.
-     */
-    public static void main(String[] args) {
-        In in = new In(args[0]);
-        EdgeWeightedDigraph G = new EdgeWeightedDigraph(in);
-        StdOut.println(G);
-    }
+	/**
+	 * Return number of edges incident from v.
+	 */
+	public int outdegree(int v) {
+		return adj[v].size();
+	}
+
+
+
+	/**
+	 * Return a string representation of this digraph.
+	 */
+	public String toString() {
+		String NEWLINE = System.getProperty("line.separator");
+		StringBuilder s = new StringBuilder();
+		s.append(V + " " + E + NEWLINE);
+		for (int v = 0; v < V; v++) {
+			s.append(v + ": ");
+			for (DirectedEdge e : adj[v]) {
+				s.append(e + "  ");
+			}
+			s.append(NEWLINE);
+		}
+		return s.toString();
+	}
+
+	/**
+	 * Test client.
+	 */
+	public static void main(String[] args) {
+		In in = new In(args[0]);
+		EdgeWeightedDigraph G = new EdgeWeightedDigraph(in, Integer.parseInt(args[1]));
+		StdOut.println(G);
+	}
 
 }

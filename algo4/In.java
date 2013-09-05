@@ -341,6 +341,21 @@ public final class In {
         return vals;
     }
 
+    
+    /**
+     * Read DirectedEdge line.
+     */
+    public int[] readDirectedEdgeFromLine() {
+        String line = readLine();
+    	if (line == null) return null;
+        String[] fields = WHITESPACE_PATTERN.split(line);
+        int[] vals = new int[fields.length];
+        for (int i = 0; i < fields.length; i++)
+            vals[i] = Integer.parseInt(fields[i]);
+        return vals;
+    }
+    
+    
     /**
      * Read all doubles until the end of input is reached, and return them.
      */
